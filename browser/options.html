@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Idleai — settings</title>
+<style>
+  body{font:14px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;background:#0b0f0e;color:#e8f0ed;
+       max-width:34rem;margin:8vh auto;padding:0 1.5rem}
+  h1{font-size:16px}
+  .star{color:#00b894}
+  label{display:block;margin:1.2rem 0 .3rem;color:#8aa39b;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  input{width:100%;box-sizing:border-box;background:#1a2320;color:#e8f0ed;border:1px solid #253430;
+        border-radius:8px;padding:.6rem .8rem;font:inherit}
+  button{margin-top:1.2rem;background:#00b894;color:#0b0f0e;border:0;border-radius:8px;
+         padding:.6rem 1.2rem;font:inherit;font-weight:600;cursor:pointer}
+  #msg{margin-top:1rem;color:#8aa39b}
+  #msg.ok{color:#00b894}
+  #msg.err{color:#fca5a5}
+  p{color:#8aa39b;font-size:13px}
+</style>
+</head>
+<body>
+  <h1><span class="star">✶</span> idleai</h1>
+  <p>Get a device token from your idleai dashboard (Developer dashboard →
+     <em>Connect your tools</em>). The token lives in extension storage and only
+     ever earns for its owner.</p>
+  <label for="baseUrl">Server URL</label>
+  <input id="baseUrl" placeholder="http://localhost:3000" />
+  <label for="token">Device token</label>
+  <input id="token" type="password" placeholder="idl_xxxxxxxx" />
+  <button id="save">Save &amp; test</button>
+  <div id="msg"></div>
+  <p style="margin-top:2rem">Self-hosting somewhere else? Add your server origin to
+     <code>host_permissions</code> in <code>manifest.json</code> and reload the extension.</p>
+  <script src="options.js"></script>
+</body>
+</html>

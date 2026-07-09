@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  body{font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;background:#0b0f0e;color:#e8f0ed;
+       width:240px;margin:0;padding:14px}
+  .star{color:#00b894}
+  .row{display:flex;justify-content:space-between;margin:.5rem 0;color:#8aa39b}
+  .row b{color:#e8f0ed;font-weight:600}
+  button{width:100%;margin-top:.6rem;background:#1a2320;color:#e8f0ed;border:1px solid #253430;
+         border-radius:8px;padding:.5rem;font:inherit;cursor:pointer}
+  button:hover{border-color:#00b894}
+  a{color:#00b894;text-decoration:none;font-size:12px}
+</style>
+</head>
+<body>
+  <div><span class="star">✶</span> idleai</div>
+  <div class="row"><span>today</span><b id="today">—</b></div>
+  <div class="row"><span>balance</span><b id="balance">—</b></div>
+  <button id="pause">pause</button>
+  <button id="options">settings</button>
+  <script src="popup.js"></script>
+</body>
+</html>

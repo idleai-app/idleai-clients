@@ -1,0 +1,11 @@
+{
+  "name": "idleai",
+  "version": "0.1.0",
+  "description": "idleai earnings and controls — check today's earnings, see the current ad, pause/resume.",
+  "mcpServers": {
+    "idleai": {
+      "command": "node",
+      "args": ["${extensionPath}/idleai-mcp.mjs"]
+    }
+  }
+}

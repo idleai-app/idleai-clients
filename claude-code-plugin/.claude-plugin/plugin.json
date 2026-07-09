@@ -1,0 +1,8 @@
+{
+  "name": "idleai",
+  "description": "Get paid while Claude thinks — one tasteful ad line in your statusline, timed to the thinking window, earnings in your ledger.",
+  "version": "0.1.0",
+  "author": { "name": "Idleai" },
+  "homepage": "https://idleai.app",
+  "keywords": ["statusline", "earnings", "ads"]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "idleai",
+  "description": "Get paid while your AI thinks — the idleai earning line as a Replit pane.",
+  "version": "0.1.0",
+  "tools": [
+    {
+      "name": "idleai",
+      "handler": "/",
+      "icon": "/icon.png"
+    }
+  ]
+}

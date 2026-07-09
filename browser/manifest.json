@@ -1,0 +1,55 @@
+{
+  "manifest_version": 3,
+  "name": "Idleai — get paid while your AI thinks",
+  "version": "0.1.0",
+  "description": "One tasteful ad line beside the thinking indicator on claude.ai, chatgpt.com, grok.com, gemini, mistral, perplexity, deepseek and replit. Verified views pay; clicks pay 50×.",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "http://localhost:3000/*",
+    "https://*.idleai.app/*"
+  ],
+  "background": {
+    "service_worker": "sw.js",
+    "scripts": ["sw.js"]
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "extension@idleai.app",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": ["authenticationInfo"],
+        "optional": ["technicalAndInteraction"]
+      }
+    }
+  },
+  "options_ui": { "page": "options.html", "open_in_tab": true },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Idleai",
+    "default_icon": { "16": "icons/icon16.png", "32": "icons/icon32.png" }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://claude.ai/*",
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*",
+        "https://grok.com/*",
+        "https://gemini.google.com/*",
+        "https://chat.mistral.ai/*",
+        "https://www.perplexity.ai/*",
+        "https://perplexity.ai/*",
+        "https://chat.deepseek.com/*",
+        "https://replit.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

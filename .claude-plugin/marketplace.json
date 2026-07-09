@@ -1,0 +1,11 @@
+{
+  "name": "idleai",
+  "owner": { "name": "Idleai" },
+  "plugins": [
+    {
+      "name": "idleai",
+      "source": "./claude-code-plugin",
+      "description": "Get paid while Claude thinks — ad line in the statusline during the thinking window, earnings otherwise."
+    }
+  ]
+}

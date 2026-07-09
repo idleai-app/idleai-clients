@@ -1,0 +1,7 @@
+node_modules/
+*.vsix
+*.zip
+*.tgz
+Idleai Companion.app/
+.DS_Store
+*.log

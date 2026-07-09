@@ -1,0 +1,19 @@
+{
+  "name": "idleai-codex-desktop-inject",
+  "private": true,
+  "version": "1.0.0",
+  "description": "idleai — opt-in reversible ad-line injection for Codex Desktop (Codex.app)",
+  "type": "module",
+  "bin": {
+    "idleai-patch-codex-desktop": "./patch.mjs"
+  },
+  "scripts": {
+    "patch": "node patch.mjs patch",
+    "unpatch": "node patch.mjs unpatch",
+    "status": "node patch.mjs status",
+    "dry-run": "node patch.mjs patch --dry-run"
+  },
+  "dependencies": {
+    "@electron/asar": "^4.0.0"
+  }
+}

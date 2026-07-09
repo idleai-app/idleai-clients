@@ -1,0 +1,42 @@
+{
+  "name": "idleai",
+  "displayName": "Idleai — get paid while you code",
+  "description": "One tasteful ad line in your status bar while your AI assistant thinks. Verified views pay you; clicks pay 50×.",
+  "version": "0.2.0",
+  "publisher": "idleai",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/idleai/idleai" },
+  "engines": { "vscode": "^1.85.0" },
+  "icon": "icon.png",
+  "categories": ["Other"],
+  "keywords": ["earnings", "status bar", "claude", "codex", "cursor"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "panel": [{ "id": "idleai", "title": "idleai", "icon": "icon.png" }]
+    },
+    "views": {
+      "idleai": [{ "type": "webview", "id": "idleai.pane", "name": "✶ earning line" }]
+    },
+    "commands": [
+      { "command": "idleai.login", "title": "Idleai: Sign in with device token" },
+      { "command": "idleai.logout", "title": "Idleai: Sign out" },
+      { "command": "idleai.openAd", "title": "Idleai: Open current ad (pays 50× a view)" },
+      { "command": "idleai.toggle", "title": "Idleai: Pause / resume" }
+    ],
+    "configuration": {
+      "title": "Idleai",
+      "properties": {
+        "idleai.baseUrl": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Your idleai server URL (e.g. `https://your-idleai.app`). Leave empty to reuse `~/.idleai.json` from the CLI."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "package": "npx @vscode/vsce package"
+  }
+}

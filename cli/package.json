@@ -1,0 +1,35 @@
+{
+  "name": "idleai",
+  "version": "0.1.1",
+  "description": "idleai — your terminal earns while your AI thinks. One tasteful ad line shows while your AI assistant thinks; verified views pay, and the revenue is split with you.",
+  "type": "module",
+  "bin": {
+    "idleai": "./idleai.mjs"
+  },
+  "license": "Apache-2.0",
+  "author": "idleai",
+  "homepage": "https://idleai.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idleai-app/idleai.git",
+    "directory": "clients/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/idleai-app/idleai/issues"
+  },
+  "keywords": [
+    "idleai",
+    "ai",
+    "ads",
+    "cli",
+    "claude",
+    "codex",
+    "gemini",
+    "grok",
+    "earnings",
+    "statusline"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

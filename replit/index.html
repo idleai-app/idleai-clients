@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>idleai</title>
+<style>
+  body{font:13px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;background:#0b0f0e;color:#e8f0ed;
+       margin:0;padding:16px;display:flex;flex-direction:column;gap:12px;min-height:100vh;box-sizing:border-box}
+  .star{color:#00b894;animation:pulse 1.2s ease-in-out infinite}
+  .star.takeover{color:#fde047}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .pill{display:flex;align-items:center;gap:8px;background:#121816;border:1px solid #253430;
+        border-radius:999px;padding:10px 14px;cursor:pointer}
+  .pill .arrow{color:#00b894}
+  .muted{color:#8aa39b}
+  .row{display:flex;justify-content:space-between;color:#8aa39b}
+  .row b{color:#e8f0ed}
+  input{width:100%;box-sizing:border-box;background:#1a2320;color:#e8f0ed;border:1px solid #253430;
+        border-radius:8px;padding:.5rem .7rem;font:inherit;margin-top:4px}
+  button{background:#00b894;color:#0b0f0e;border:0;border-radius:8px;padding:.5rem 1rem;
+         font:inherit;font-weight:600;cursor:pointer}
+  button.ghost{background:#1a2320;color:#e8f0ed;border:1px solid #253430}
+  #setup,#main{display:none}
+  label{color:#8aa39b;font-size:11px;text-transform:uppercase;letter-spacing:.04em;display:block;margin-top:8px}
+</style>
+</head>
+<body>
+  <div><span class="star">✶</span> idleai <span class="muted">— get paid while your AI thinks</span></div>
+
+  <div id="setup">
+    <label>server url</label><input id="baseUrl" placeholder="https://your-idleai.app" />
+    <label>device token</label><input id="token" type="password" placeholder="idl_xxxxxxxx" />
+    <div style="margin-top:10px"><button id="save">save &amp; start</button></div>
+    <div id="msg" class="muted" style="margin-top:8px"></div>
+  </div>
+
+  <div id="main">
+    <div class="pill" id="pill" title="click = open ad (pays 50×)">
+      <span class="star" id="pstar">✶</span><span id="ptext" class="muted">waiting for inventory…</span>
+      <span class="arrow">↗</span>
+    </div>
+    <div class="row"><span>today</span><b id="today">$0.00</b></div>
+    <div class="row"><span>session</span><b id="session">+$0.00</b></div>
+    <div style="display:flex;gap:8px">
+      <button class="ghost" id="pause">pause</button>
+      <button class="ghost" id="logout">sign out</button>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const usd = (m) => `$${(m / 1e6).toFixed(m !== 0 && m < 10000 ? 4 : 2)}`;
+  const adText = (t) => t.replace(/\s*↗\s*$/u, "");
+  const VIEW_MS = 5000, ROTATE_MS = 12000;
+
+  let cfg = { token: localStorage.getItem("idleai.token"), baseUrl: localStorage.getItem("idleai.baseUrl") };
+  let ad = null, shownAt = 0, paid = false, paused = false, today = 0, session = 0, reason = null;
+  const REASONS = {
+    vpn_detected: "VPN detected — disconnect to earn",
+    geo_mismatch: "country mismatch — fix your location",
+    killswitch: "paused by server",
+    busy_elsewhere: "another device is earning — this one stands by",
+  };
+
+  const api = async (path, init = {}) => {
+    const res = await fetch(cfg.baseUrl + path, {
+      ...init,
+      headers: { Authorization: `Bearer ${cfg.token}`, "Content-Type": "application/json" },
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error ?? res.status);
+    return data;
+  };
+
+  const show = (view) => { $("setup").style.display = view === "setup" ? "block" : "none";
+                           $("main").style.display = view === "main" ? "block" : "none"; };
+
+  const render = () => {
+    if (ad) { $("ptext").textContent = adText(ad.text); $("ptext").classList.remove("muted");
+              $("pstar").classList.toggle("takeover", !!ad.takeover); }
+    else { $("ptext").textContent = paused ? "paused" : (REASONS[reason] ?? "waiting for inventory…"); $("ptext").classList.add("muted"); }
+    $("today").textContent = usd(today);
+    $("session").textContent = `+${usd(session)}`;
+    $("pause").textContent = paused ? "resume" : "pause";
+  };
+
+  const serve = async () => {
+    const res = await api("/api/serve").catch(() => ({ ad: null }));
+    ad = res.ad; reason = res.reason ?? null; shownAt = Date.now(); paid = false; render();
+  };
+
+  setInterval(async () => {
+    if (!cfg.token || paused) return;
+    if (document.hidden) { // honest views: the 5s must be continuous & visible
+      if (ad) { ad = null; render(); }
+      return;
+    }
+    if (!ad) return serve();
+    const el = Date.now() - shownAt;
+    if (!paid && el >= VIEW_MS) {
+      paid = true;
+      const ev = await api("/api/events", { method: "POST",
+        body: JSON.stringify({ campaignId: ad.campaignId, type: "impression" }) }).catch(() => null);
+      if (ev?.ok) { today += ev.customer_share_micros; session += ev.customer_share_micros; render(); }
+    }
+    if (paid && el >= ROTATE_MS) serve();
+  }, 1000);
+
+  $("pill").addEventListener("click", async () => {
+    if (!ad) return;
+    window.open(ad.url, "_blank");
+    const ev = await api("/api/events", { method: "POST",
+      body: JSON.stringify({ campaignId: ad.campaignId, type: "click" }) }).catch(() => null);
+    if (ev?.ok) { today += ev.customer_share_micros; session += ev.customer_share_micros; render(); }
+  });
+  $("pause").addEventListener("click", () => { paused = !paused; if (paused) ad = null; render(); });
+  $("logout").addEventListener("click", () => { localStorage.clear(); location.reload(); });
+  $("save").addEventListener("click", async () => {
+    cfg = { token: $("token").value.trim(), baseUrl: $("baseUrl").value.trim().replace(/\/$/, "") };
+    try {
+      const me = await api("/api/me");
+      localStorage.setItem("idleai.token", cfg.token);
+      localStorage.setItem("idleai.baseUrl", cfg.baseUrl);
+      $("msg").textContent = `signed in as ${me.user.email}`;
+      start();
+    } catch (e) { $("msg").textContent = `token rejected: ${e.message}`; }
+  });
+
+  async function start() {
+    show("main");
+    const s = await api("/api/customer/stats").catch(() => null);
+    if (s) today = s.stats.today_micros;
+    render();
+  }
+
+  cfg.token && cfg.baseUrl ? start() : show("setup");
+})();
+</script>
+</body>
+</html>
