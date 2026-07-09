@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Idleai — get paid while your AI thinks",
   "version": "0.1.2",
-  "description": "One tasteful ad line beside the thinking indicator on claude.ai, chatgpt.com, grok.com, gemini, mistral, perplexity, deepseek and replit. Verified views pay; clicks pay 50×.",
+  "description": "An ad line beside the AI thinking indicator on claude.ai, chatgpt, grok, gemini, mistral, perplexity, deepseek. Verified views pay.",
   "permissions": ["storage"],
   "host_permissions": [
     "http://localhost:3000/*",
