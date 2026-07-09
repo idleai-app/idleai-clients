@@ -165,7 +165,13 @@
     if (typeof res?.lingerSeconds === "number") lingerSeconds = res.lingerSeconds;
     if (res?.ad) show(res.ad);
     else if (REASONS[res?.reason]) showWarning(REASONS[res.reason]);
-    else hide();
+    else {
+      // No pill and no user-facing reason (no_inventory, killswitch, paused,
+      // no_token) — silent by design for real developers, but logged so the
+      // console answers "why is nothing showing?" when debugging a setup.
+      if (res?.reason || res?.error) console.debug("[idleai] no ad:", res.reason ?? res.error);
+      hide();
+    }
   }
 
   async function tick() {
