@@ -6,6 +6,7 @@
  *   idleai run              live ad line in this terminal (o = open/click, q = quit)
  *   idleai codex [args…]    run the Codex CLI with the ad line under it (tmux)
  *   idleai gemini|grok      same wrapper for the Gemini and Grok CLIs
+ *   idleai aider|opencode|q|goose  same wrapper for aider, opencode, Amazon Q, goose
  *   idleai statusline       one-shot line for Claude Code's statusLine integration
  *   idleai setup-claude     wire `idleai statusline` into ~/.claude/settings.json
  *   idleai patch-codex      inject the ad line INSIDE the Codex VS Code panel
@@ -211,6 +212,15 @@ const AGENT_AGES = {
   codex: codexActivityAge,
   gemini: () => newestWriteAge(join(homedir(), ".gemini", "tmp"), 5, { files: 600 }),
   grok: () => newestWriteAge(join(homedir(), ".grok"), 4, { files: 400 }),
+  // aider / opencode / Amazon Q / goose: no verified session-write signal yet,
+  // so gate on the wrapper itself — being inside `idleai <tool>` means the tool
+  // is up. Age 0 = always within the window; the server's 5s on-screen + 4s
+  // pacing + focus rules still fully apply, so this stays honest-view. Swap in a
+  // real newestWriteAge(...) path here once a session location is verified.
+  aider: () => 0,
+  opencode: () => 0,
+  q: () => 0,
+  goose: () => 0,
 };
 const agentAge = (name) =>
   name === "any" ? Math.min(...Object.values(AGENT_AGES).map((fn) => fn())) : AGENT_AGES[name]();
@@ -1103,6 +1113,10 @@ switch (cmd) {
   case "codex":
   case "gemini":
   case "grok":
+  case "aider":
+  case "opencode":
+  case "q":
+  case "goose":
     await cmdWrap(cmd, args);
     break;
   case "statusline":
@@ -1145,6 +1159,7 @@ usage:
   idleai run            live earning line in this terminal (works in Replit too)
   idleai codex [args…]  run the Codex CLI with the ad line under it (needs tmux)
   idleai gemini|grok    same wrapper for the Gemini and Grok CLIs
+  idleai aider|opencode|q|goose  same wrapper for aider, opencode, Amazon Q, goose
   idleai statusline     one-shot line for statusbar integrations
   idleai open           open the current ad in your browser (a click pays 50× a view)
   idleai setup-claude   put the ad line under every Claude Code session

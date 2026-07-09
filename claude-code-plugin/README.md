@@ -16,7 +16,7 @@ companion carries the earnings line.
 npx idleai login idl_xxxxx --url https://your-idleai.app
 
 # 2. Add the marketplace + plugin (inside Claude Code)
-/plugin marketplace add idleai-app/idleai
+/plugin marketplace add idleai-app/idleai-clients
 /plugin install idleai@idleai
 
 # 3. Wire the statusline
