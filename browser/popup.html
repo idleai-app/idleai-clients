@@ -16,9 +16,15 @@
 </head>
 <body>
   <div><span class="star">✶</span> idleai</div>
-  <div class="row"><span>today</span><b id="today">—</b></div>
-  <div class="row"><span>balance</span><b id="balance">—</b></div>
-  <button id="pause">pause</button>
+  <div id="connected">
+    <div class="row"><span>today</span><b id="today">—</b></div>
+    <div class="row"><span>balance</span><b id="balance">—</b></div>
+    <button id="pause">pause</button>
+  </div>
+  <div id="disconnected" style="display:none">
+    <p style="color:#8aa39b;margin:.5rem 0">Sign in once to start earning — no token to copy.</p>
+    <button id="connect">Connect idleai</button>
+  </div>
   <button id="options">settings</button>
   <script src="popup.js"></script>
 </body>

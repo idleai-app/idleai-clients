@@ -1,16 +1,28 @@
 {
   "manifest_version": 3,
   "name": "Idleai — get paid while your AI thinks",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "One tasteful ad line beside the thinking indicator on claude.ai, chatgpt.com, grok.com, gemini, mistral, perplexity, deepseek and replit. Verified views pay; clicks pay 50×.",
   "permissions": ["storage"],
   "host_permissions": [
     "http://localhost:3000/*",
+    "http://localhost:5001/*",
+    "https://idleai.app/*",
+    "https://www.idleai.app/*",
     "https://*.idleai.app/*"
   ],
   "background": {
     "service_worker": "sw.js",
     "scripts": ["sw.js"]
+  },
+  "externally_connectable": {
+    "matches": [
+      "http://localhost:3000/*",
+      "http://localhost:5001/*",
+      "https://idleai.app/*",
+      "https://www.idleai.app/*",
+      "https://*.idleai.app/*"
+    ]
   },
   "browser_specific_settings": {
     "gecko": {

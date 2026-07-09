@@ -51,3 +51,19 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     .catch((e) => sendResponse({ error: e.message }));
   return true; // async response
 });
+
+// One-click connect: the idleai.app connect page (allowed via
+// externally_connectable) mints a device token for the signed-in developer and
+// hands it here, so the token never gets copy-pasted or shown on screen. Chrome
+// already restricts senders to the declared origins; we still sanity-check the
+// shape and only store an idl_ token.
+chrome.runtime.onMessageExternal.addListener((msg, _sender, sendResponse) => {
+  if (msg?.type !== "idleai-connect" || typeof msg.token !== "string" || !msg.token.startsWith("idl_")) {
+    sendResponse({ ok: false });
+    return;
+  }
+  const body = { token: msg.token };
+  if (typeof msg.baseUrl === "string" && /^https?:\/\//.test(msg.baseUrl)) body.baseUrl = msg.baseUrl;
+  chrome.storage.sync.set(body).then(() => sendResponse({ ok: true }));
+  return true; // async response
+});
